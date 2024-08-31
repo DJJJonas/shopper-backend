@@ -10,7 +10,7 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BadRequestFilter } from '~/common/filters/invalid-data/invalid-data.filter';
+import { BadRequestFilter } from '~/common/filters/bad-request/bad-request.filter';
 import { makeError } from '~/common/util/http-error.util';
 import { Measure } from '../core/measure.entity';
 import { MeasureService } from '../service/measure.service';

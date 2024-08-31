@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { MEASURE_TYPES, MeasureType } from '~/common/constants';
-import { BadRequestFilter } from '~/common/filters/invalid-data/invalid-data.filter';
+import { BadRequestFilter } from '~/common/filters/bad-request/bad-request.filter';
 import { makeError } from '~/common/util/http-error.util';
 import { Measure } from '~/domains/measure/core/measure.entity';
 import { CustomerService } from '../service/customer.service';
