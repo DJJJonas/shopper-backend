@@ -8,24 +8,13 @@ import { MeasureModule } from './domains/measure/measure.module';
 import { MeasureService } from './domains/measure/service/measure.service';
 import { MeasureController } from './domains/measure/web/measure.controller';
 import { GeminiModule } from './providers/gemini/gemini.module';
+import configModuleOptions from './config/config-module-options.config';
+import typeormModuleOptions from './config/typeorm-module-options.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      autoLoadEntities: true,
-      migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
-      migrationsRun: true,
-      migrationsTableName: 'migrations',
-    }),
+    ConfigModule.forRoot(configModuleOptions),
+    TypeOrmModule.forRoot(typeormModuleOptions()),
     GeminiModule,
 
     MeasureModule,
