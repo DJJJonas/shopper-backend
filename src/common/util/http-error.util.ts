@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import IErrorResponseBody from '../interfaces/error.interface';
 
 export class HttpErrorType {
   @ApiProperty({ examples: ['INVALID_DATA', 'INVALID_TYPE'] })
@@ -7,7 +8,10 @@ export class HttpErrorType {
   error_description: any;
 }
 
-export const makeError = (error_code: string, error_description?: any) =>
+export const makeError = (
+  error_code: string,
+  error_description?: any,
+): IErrorResponseBody =>
   error_description
     ? {
         error_code,

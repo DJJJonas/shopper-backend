@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBase64, IsDateString, IsEnum, IsString } from 'class-validator';
+import { IsBase64, IsDateString, IsString } from 'class-validator';
 import { UUID } from 'crypto';
 import { MEASURE_TYPES, MeasureType } from '~/common/constants';
+import { IsMeasureType } from '~/common/decoratos/is-measure-type/is-measure-type.decorator';
 
 export class UploadRequestBody {
   @IsBase64()
@@ -16,7 +17,7 @@ export class UploadRequestBody {
   @ApiProperty()
   measure_datetime: Date;
 
-  @IsEnum(MEASURE_TYPES)
+  @IsMeasureType()
   @ApiProperty({ enum: MEASURE_TYPES })
   measure_type: MeasureType;
 }
