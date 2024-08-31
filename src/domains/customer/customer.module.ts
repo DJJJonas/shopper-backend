@@ -1,13 +1,14 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { customerProviders } from './infra/customer.providers';
-import { CustomerController } from './web/customer.controller';
+import { Module } from '@nestjs/common';
 import { CustomerService } from './service/customer.service';
-import { MeasureModule } from '../measure/measure.module';
+import { CustomerController } from './web/customer.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Measure } from '../measure/core/measure.entity';
+import { Customer } from './core/customer.entity';
 
 @Module({
-  imports: [forwardRef(() => MeasureModule)],
+  imports: [TypeOrmModule.forFeature([Customer, Measure])],
   controllers: [CustomerController],
-  providers: [CustomerService, ...customerProviders],
-  exports: [CustomerService],
+  providers: [CustomerService],
+  exports: [TypeOrmModule],
 })
 export class CustomerModule {}

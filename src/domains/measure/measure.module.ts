@@ -1,14 +1,14 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { GeminiModule } from '~/providers/gemini/gemini.module';
-import { CustomerModule } from '../customer/customer.module';
-import { measureProviders } from './infra/measure.providers';
+import { Module } from '@nestjs/common';
 import { MeasureService } from './service/measure.service';
 import { MeasureController } from './web/measure.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Measure } from './core/measure.entity';
+import { Customer } from '../customer/core/customer.entity';
 
 @Module({
-  imports: [GeminiModule, forwardRef(() => CustomerModule)],
+  imports: [TypeOrmModule.forFeature([Measure, Customer])],
   controllers: [MeasureController],
-  providers: [MeasureService, ...measureProviders],
-  exports: [MeasureService],
+  providers: [MeasureService],
+  exports: [TypeOrmModule],
 })
 export class MeasureModule {}

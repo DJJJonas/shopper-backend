@@ -1,22 +1,19 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Repository } from 'typeorm';
-import {
-  MEASURE_REPOSITORY,
-  MeasureType,
-  ValidGeminiMimeType,
-} from '~/common/constants';
-import { CustomerService } from '~/domains/customer/service/customer.service';
+import { MeasureType, ValidGeminiMimeType } from '~/common/constants';
 import { GeminiService } from '~/providers/gemini/gemini.service';
 import { Measure } from '../core/measure.entity';
+import { Customer } from '~/domains/customer/core/customer.entity';
 
 @Injectable()
 export class MeasureService {
   constructor(
-    @Inject(MEASURE_REPOSITORY)
+    @InjectRepository(Measure)
     private measureRepository: Repository<Measure>,
-    @Inject(forwardRef(() => CustomerService))
-    private customerService: CustomerService,
+    @InjectRepository(Customer)
+    private customerRespository: Repository<Customer>,
     private geminiService: GeminiService,
   ) {}
 
@@ -96,7 +93,8 @@ export class MeasureService {
       validMimeType,
     );
 
-    const customer = await this.customerService.save(customerCode);
+    let customer = new Customer(customerCode);
+    customer = await this.customerRespository.save(customer);
 
     const measure = await this.measureRepository.save(
       new Measure(customer, imageUrl, datetime, type, value),

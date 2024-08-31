@@ -1,17 +1,17 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CUSTOMER_REPOSITORY, MeasureType } from '~/common/constants';
+import { MeasureType } from '~/common/constants';
 import { Measure } from '~/domains/measure/core/measure.entity';
-import { MeasureService } from '~/domains/measure/service/measure.service';
 import { Customer } from '../core/customer.entity';
 
 @Injectable()
 export class CustomerService {
   constructor(
-    @Inject(CUSTOMER_REPOSITORY)
+    @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
-    @Inject(forwardRef(() => MeasureService))
-    private measureService: MeasureService,
+    @InjectRepository(Measure)
+    private measureRepository: Repository<Measure>,
   ) {}
 
   async findMeasuresByType(
@@ -20,12 +20,14 @@ export class CustomerService {
   ): Promise<Measure[]> {
     let measures: Measure[];
     if (measureType) {
-      measures = await this.measureService.findAllFromType(
-        customerId,
-        measureType,
-      );
+      measures = await this.measureRepository.findBy({
+        customer: { id: customerId },
+        type: measureType,
+      });
     } else {
-      measures = await this.measureService.findAllFrom(customerId);
+      measures = await this.measureRepository.findBy({
+        customer: { id: customerId },
+      });
     }
     return measures;
   }
