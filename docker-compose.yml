@@ -7,14 +7,13 @@ services:
     env_file:
       - .env
     environment:
-      PORT: 3000
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       POSTGRES_USER: shopper
       POSTGRES_PASSWORD: shopper
       POSTGRES_DB: shopper
     ports:
-      - '${PORT}:3000'
+      - '3000:3000'
     depends_on:
       - db
     networks:
