@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -12,12 +11,12 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { BadRequestFilter } from '~/common/filters/bad-request/bad-request.filter';
 import { makeError } from '~/common/util/http-error.util';
-import { Measure } from '../core/measure.entity';
 import { MeasureService } from '../service/measure.service';
 import { ConfirmRequestBody, ConfirmResponseBody } from './dto/confirm.dto';
 import { UploadRequestBody, UploadResponseBody } from './dto/upload.dto';
-import { ApiMeasureUpload } from './swagger/upload.decorator';
 import { ApiMeasureConfirm } from './swagger/confirm.decorator';
+import { ApiMeasureUpload } from './swagger/upload.decorator';
+import GoogleGenerativeAIErrorFilter from '~/common/filters/google-generative-ai-error/google-generative-ai-error.filter';
 
 @Controller()
 @ApiTags('Measure')
@@ -26,7 +25,10 @@ export class MeasureController {
 
   @Post('upload')
   @HttpCode(200)
-  @UseFilters(new BadRequestFilter('INVALID_DATA'))
+  @UseFilters(
+    new BadRequestFilter('INVALID_DATA'),
+    new GoogleGenerativeAIErrorFilter('INVALID_DATA'),
+  )
   @ApiMeasureUpload()
   async upload(@Body() body: UploadRequestBody) {
     const { image, customer_code, measure_datetime, measure_type } = body;
@@ -41,18 +43,12 @@ export class MeasureController {
       throw new ConflictException(message);
     }
 
-    let measure: Measure;
-    try {
-      measure = await this.measureService.save(
-        customer_code,
-        image,
-        new Date(measure_datetime),
-        measure_type,
-      );
-    } catch (error) {
-      if (error instanceof Error)
-        throw new BadRequestException(makeError(error.message));
-    }
+    const measure = await this.measureService.save(
+      customer_code,
+      image,
+      new Date(measure_datetime),
+      measure_type,
+    );
 
     return new UploadResponseBody(measure.imageUrl, measure.value, measure.id);
   }
