@@ -9,14 +9,14 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BadRequestFilter } from '~/common/filters/bad-request/bad-request.filter';
+import GoogleGenerativeAIErrorFilter from '~/common/filters/google-generative-ai-error/google-generative-ai-error.filter';
+import { UnprocessableEntityExceptionFilter } from '~/common/filters/unprocessable-entity-exception/unprocessable-entity-exception.filter';
 import { makeError } from '~/common/util/http-error.util';
 import { MeasureService } from '../service/measure.service';
 import { ConfirmRequestBody, ConfirmResponseBody } from './dto/confirm.dto';
 import { UploadRequestBody, UploadResponseBody } from './dto/upload.dto';
 import { ApiMeasureConfirm } from './swagger/confirm.decorator';
 import { ApiMeasureUpload } from './swagger/upload.decorator';
-import GoogleGenerativeAIErrorFilter from '~/common/filters/google-generative-ai-error/google-generative-ai-error.filter';
 
 @Controller()
 @ApiTags('Measure')
@@ -26,7 +26,7 @@ export class MeasureController {
   @Post('upload')
   @HttpCode(200)
   @UseFilters(
-    new BadRequestFilter('INVALID_DATA'),
+    new UnprocessableEntityExceptionFilter('INVALID_DATA'),
     new GoogleGenerativeAIErrorFilter('INVALID_DATA'),
   )
   @ApiMeasureUpload()
@@ -55,7 +55,7 @@ export class MeasureController {
 
   @Patch('confirm')
   @HttpCode(200)
-  @UseFilters(new BadRequestFilter('INVALID_DATA'))
+  @UseFilters(new UnprocessableEntityExceptionFilter('INVALID_DATA'))
   @ApiMeasureConfirm()
   async confirm(@Body() body: ConfirmRequestBody) {
     const found = await this.measureService.exists(body.measure_uuid);

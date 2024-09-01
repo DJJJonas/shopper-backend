@@ -1,4 +1,7 @@
-import { BadRequestException, ValidationPipeOptions } from '@nestjs/common';
+import {
+  UnprocessableEntityException,
+  ValidationPipeOptions,
+} from '@nestjs/common';
 import { makeError } from '~/common/util/http-error.util';
 
 const validationPipeOptions: ValidationPipeOptions = {
@@ -14,7 +17,7 @@ const validationPipeOptions: ValidationPipeOptions = {
     });
     const errorDescription = errorDescriptions.join(', ');
     const message = makeError(errorCode, errorDescription);
-    return new BadRequestException(message);
+    return new UnprocessableEntityException(message);
   },
 };
 
