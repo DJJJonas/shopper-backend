@@ -9,7 +9,7 @@ const getTypeORMModuleOptions = (): TypeOrmModuleOptions => ({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   autoLoadEntities: true,
-  migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
   migrationsRun: true,
   migrationsTableName: 'migrations',
 });
