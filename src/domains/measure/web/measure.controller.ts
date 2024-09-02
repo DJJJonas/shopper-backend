@@ -62,18 +62,18 @@ export class MeasureController {
   async confirm(@Body() body: ConfirmRequestBody) {
     const found = await this.measureService.exists(body.measure_uuid);
     if (!found) {
-      throw new NotFoundException(
-        'MEASURE_NOT_FOUND',
-        'Leitura não encontrada',
-      );
+      const error = makeError('MEASURE_NOT_FOUND', 'Leitura não encontrada');
+      throw new NotFoundException(error);
     }
     const confirmed = await this.measureService.isAlreadyConfirmed(
       body.measure_uuid,
     );
     if (confirmed) {
-      throw new ConflictException(
-        makeError('CONFIRMATION_DUPLICATE', 'Leitura do mês já realizada'),
+      const error = makeError(
+        'CONFIRMATION_DUPLICATE',
+        'Leitura do mês já realizada',
       );
+      throw new ConflictException(error);
     }
 
     await this.measureService.confirm(body.measure_uuid, body.confirmed_value);
