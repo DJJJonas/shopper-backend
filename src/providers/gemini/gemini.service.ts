@@ -3,7 +3,9 @@ import { GoogleAIFileManager } from '@google/generative-ai/server';
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as os from 'os';
-import { PATH_DELIMITER, ValidGeminiMimeType } from '~/common/constants';
+import { PATH_DELIMITER } from '~/common/constants';
+import { InvalidMimeTypeException } from '~/common/exceptions/invalid-mimetype.exception';
+import checkBufferMimeType from '~/common/util/check-buffer-mime.util';
 
 @Injectable()
 export class GeminiService {
@@ -18,10 +20,15 @@ export class GeminiService {
   }
 
   /** Don't forget to handle errors */
-  async extractValueFromFile(buffer: Buffer, mimeType: ValidGeminiMimeType) {
-    // TODO: check if mimeType is valid
+  async extractValueFromFile(buffer: Buffer) {
+    const mimeType = checkBufferMimeType(buffer);
+    if (!mimeType) throw new InvalidMimeTypeException();
+    const type = mimeType.split('/')[1];
+    const ext = type === 'jpeg' ? 'jpg' : type;
     const tempDir = os.tmpdir();
-    const filename = [tempDir, `image-${Date.now()}.png`].join(PATH_DELIMITER);
+    const filename = [tempDir, `image-${Date.now()}.${ext}`].join(
+      PATH_DELIMITER,
+    );
     fs.writeFileSync(filename, buffer);
     try {
       // fileManager.uploadFile only accepts string file paths

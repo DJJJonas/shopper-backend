@@ -17,6 +17,7 @@ import { ConfirmRequestBody, ConfirmResponseBody } from './dto/confirm.dto';
 import { UploadRequestBody, UploadResponseBody } from './dto/upload.dto';
 import { ApiMeasureConfirm } from './swagger/confirm.decorator';
 import { ApiMeasureUpload } from './swagger/upload.decorator';
+import InvalidMimeTypeExceptionFilter from '~/common/filters/invalid-mimetype-exception/invalid-mimetype-exception.filter';
 
 @Controller()
 @ApiTags('Measure')
@@ -28,6 +29,7 @@ export class MeasureController {
   @UseFilters(
     new UnprocessableEntityExceptionFilter('INVALID_DATA'),
     new GoogleGenerativeAIErrorFilter('INVALID_DATA'),
+    new InvalidMimeTypeExceptionFilter('INVALID_DATA'),
   )
   @ApiMeasureUpload()
   async upload(@Body() body: UploadRequestBody) {

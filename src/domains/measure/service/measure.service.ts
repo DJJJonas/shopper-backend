@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Repository } from 'typeorm';
-import { MeasureType, ValidGeminiMimeType } from '~/common/constants';
+import { MeasureType } from '~/common/constants';
+import { Customer } from '~/domains/customer/core/customer.entity';
 import { GeminiService } from '~/providers/gemini/gemini.service';
 import { Measure } from '../core/measure.entity';
-import { Customer } from '~/domains/customer/core/customer.entity';
 
 @Injectable()
 export class MeasureService {
@@ -86,12 +86,9 @@ export class MeasureService {
     type: MeasureType,
   ) {
     const buffer = Buffer.from(image, 'base64');
-    const validMimeType: ValidGeminiMimeType = 'image/png';
 
-    const { imageUrl, value } = await this.geminiService.extractValueFromFile(
-      buffer,
-      validMimeType,
-    );
+    const { imageUrl, value } =
+      await this.geminiService.extractValueFromFile(buffer);
 
     let customer = new Customer(customerCode);
     customer = await this.customerRespository.save(customer);
