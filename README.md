@@ -22,29 +22,29 @@ Go to the project directory
   docker-compose up --build
 ```
 
-- You Access http://localhost:3000/ to access Swagger.
+- Go to http://localhost:3000/ to access Swagger.
 
 ### Running in development mode
 
-Install pnpm
+ 1. Install pnpm
 
 ```bash
   npm install -g pnpm
 ```
 
-Install dependencies
+ 2. Install dependencies
 
 ```bash
   pnpm install
 ```
 
-Run the database
+ 3. Run the database
 
 ```bash
 docker-compose up --build
 ```
 
-Run the project in development mode
+ 4. Run the project in development mode
 
 ```bash
 pnpm start:dev
