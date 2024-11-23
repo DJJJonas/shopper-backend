@@ -1,6 +1,6 @@
 <h1 align="center">Shopper Back-end</h1>
 
-Technical test sent to me by Shopper. A back-end of a image reading service. There is 3 endpoints and one integration with Google Gemini's API.
+Technical test sent to me by Shopper. A back-end of an image reading service. There is 3 endpoints and one integration with Google Gemini's API.
 
 ## Run Locally
 
@@ -50,7 +50,7 @@ docker-compose up --build
 pnpm start:dev
 ```
 
-## Referenses
+## References
 
 - [Install Node and NPM](https://nodejs.org/)
 - [Install Docker](https://docs.docker.com/engine/install/)
